@@ -2,3 +2,6 @@ requests
 streamlit
 streamlit_lottie
 Pillow
+numpy
+scipy
+matplotlib
