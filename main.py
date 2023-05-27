@@ -1,5 +1,8 @@
+# streamlit hello --server.enableCORS false --server.enableXsrfProtection false
+
 import base64
 import numpy as np
+import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
@@ -155,11 +158,21 @@ with col3:
 fig1, axe1 = plt.subplots()
 img1 = mpimg.imread(f'Imagenes/carta1.png')
 axe1.imshow(img1)
-axe1.plot([[fx(x1), 50], [fx(x1), 550]], [[650, fy(fz(x1, y1))], [20, fy(fz(x1, y1))]], 'red', linestyle = 'dashed')
+axe1.plot([fx(x1), fx(x1)], [650, 20], 'red', linestyle = 'dashed')
+axe1.plot([50, 550], [fy(fz(x1, y1)), fy(fz(x1, y1))], 'red', linestyle = 'dashed')
 axe1.scatter(fx(x1), fy(fz(x1, y1)), 25, 'red')
 axe1.axis('off')
 col4.pyplot(fig1)
 
+col19, col20 = st.columns([1, 1])
+with col19:
+     with st.form('form2'):
+          data1 = {'Parametro': ['Densidad', 'Diamentro externo', 'Diametro interno', 'Longitud', 'Fuerza', 'Momento', 'Apoyo inicial', 'Apoyo final', 'Elementos'], 'Valor': ['0'] * 9}
+          df1   = pd.DataFrame(data = data1, index = ['-'] * 9)
+          st.experimental_data_editor(df1, key = 'table1')
+          submitted2 = st.form_submit_button("Calcular eje")
+v = st.session_state.table1
+st.write(v['edited_cells']['0:2'])
 #st.components.v1.html(f'<iframe src={i}> </iframe>')
 #url1 = 'https://junior19.starboard.host/v1/embed/0.15.3/cbljq1i23akg00a8j9b0/n529MY4/'
 #st.markdown(f'<iframe src={url1} height="660" width="50%"></iframe>', unsafe_allow_html = True)
