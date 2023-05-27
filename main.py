@@ -14,7 +14,7 @@ st.markdown("<h6 style='text-align: center; color: black;'>Universidad Nacional 
 st.markdown("<h6 style='text-align: center; color: black;'>Arequipa - 2023</h1>", unsafe_allow_html=True)
 st.divider()
 
-file_    = open(r'Imagenes\Logo.gif', "rb")
+file_    = open(r'\Imagenes\Logo.gif', "rb")
 contents = file_.read()
 data_url = base64.b64encode(contents).decode("utf-8")
 file_.close()
