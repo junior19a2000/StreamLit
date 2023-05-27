@@ -14,7 +14,7 @@ st.markdown("<h6 style='text-align: center; color: black;'>Universidad Nacional 
 st.markdown("<h6 style='text-align: center; color: black;'>Arequipa - 2023</h1>", unsafe_allow_html=True)
 st.divider()
 
-file_    = open(r'.\Imagenes\Logo.gif', "rb")
+file_    = open(r'Imagenes/Logo.gif', "rb")
 contents = file_.read()
 data_url = base64.b64encode(contents).decode("utf-8")
 file_.close()
@@ -37,7 +37,7 @@ with tab1:
      st.subheader('Correas planas')
      col7, col8 = st.columns([1,3])
      with col7:
-          st.image(Image.open(r'Imagenes\forbo.png').resize((600, 800)))
+          st.image(Image.open(r'Imagenes/forbo.png').resize((600, 800)))
      with col8:
           st.write('''
           Se analizan bajo la metodología desarrollada por la empresa Forbo, la cual, mediante datos de entrada 
@@ -49,7 +49,7 @@ with tab2:
      st.subheader('Correas trapezoidales')
      col9, col10 = st.columns([1,3])
      with col9:
-          st.image(Image.open(r'Imagenes\optibelt.png').resize((600, 800)))
+          st.image(Image.open(r'Imagenes/optibelt.png').resize((600, 800)))
      with col10:
           st.write('''
           Se analizan bajo la metodología desarrollada por la empresa Optibelt, la cual, mediante datos de 
@@ -61,7 +61,7 @@ with tab3:
      st.subheader('Cadenas')
      col11, col12 = st.columns([1,3])
      with col11:
-          st.image(Image.open(r'Imagenes\renold.png').resize((600, 800)))
+          st.image(Image.open(r'Imagenes/renold.png').resize((600, 800)))
      with col12:
           st.write('''
           Se analizan bajo la metodología desarrollada por la empresa Renold, la cual, mediante datos de entrada 
@@ -73,7 +73,7 @@ with tab4:
      st.subheader('Engranajes')
      col13, col14 = st.columns([1,3])
      with col13:
-          st.image(Image.open(r'Imagenes\agma.png').resize((600, 800)))
+          st.image(Image.open(r'Imagenes/agma.png').resize((600, 800)))
      with col14:
           st.markdown('''
           Se analizan bajo la norma ANSI / AGMA 2101-D04, en la cual se definen cuatro tipos de fallas, 
@@ -91,7 +91,7 @@ with tab5:
      st.subheader('Ejes de transmisión')
      col15, col16 = st.columns([1,3])
      with col15:
-          st.image(Image.open(r'Imagenes\logan.png').resize((600, 800)))
+          st.image(Image.open(r'Imagenes/logan.png').resize((600, 800)))
      with col16:
           st.write('''
           Se analizan bajo la metodología desarrollada por la empresa Forbo, la cual, mediante datos de entrada 
@@ -103,7 +103,7 @@ with tab6:
      st.subheader('Chavetas')
      col17, col18 = st.columns([1,3])
      with col17:
-          st.image(Image.open(r'Imagenes\bandari.png').resize((600, 800)))
+          st.image(Image.open(r'Imagenes/bandari.png').resize((600, 800)))
      with col18:
           st.write('''
           Se analizan bajo la metodología desarrollada por la empresa Forbo, la cual, mediante datos de entrada 
@@ -153,7 +153,7 @@ with col3:
         # if submitted1:
         #      st.write("x1", x1, "y1", y1)
 fig1, axe1 = plt.subplots()
-img1 = mpimg.imread(f'Imagenes\carta1.png')
+img1 = mpimg.imread(f'Imagenes/carta1.png')
 axe1.imshow(img1)
 axe1.plot([[fx(x1), 50], [fx(x1), 550]], [[650, fy(fz(x1, y1))], [20, fy(fz(x1, y1))]], 'red', linestyle = 'dashed')
 axe1.scatter(fx(x1), fy(fz(x1, y1)), 25, 'red')
@@ -165,7 +165,7 @@ col4.pyplot(fig1)
 #st.markdown(f'<iframe src={url1} height="660" width="50%"></iframe>', unsafe_allow_html = True)
 
 st.divider()
-foto = Image.open(r'Imagenes\FotografiaJR.png')
+foto = Image.open(r'Imagenes/FotografiaJR.png')
 col1, col2 = st.columns([3, 1], gap = 'large')
 col1.header('Sobre mí ...')
 desc = 'Cuando elegí la carrera de Ingeniería Mecánica no estaba seguro si en verdad era lo que queria estudiar,\
