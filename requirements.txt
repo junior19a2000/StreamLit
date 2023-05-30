@@ -1,7 +1,7 @@
 requests
-streamlit
-streamlit_lottie
-Pillow
 numpy
-scipy==1.6.2
+streamlit
 matplotlib
+scipy
+st_cytoscape
+Pillow
