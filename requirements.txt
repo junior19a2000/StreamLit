@@ -1,5 +1,6 @@
-requests
 numpy
+sympy
+pandas
 streamlit
 matplotlib
 scipy
