@@ -1,7 +1,10 @@
 # streamlit hello --server.enableCORS false --server.enableXsrfProtection false
 
+# Importan las librerias necesarias
 import base64
 import numpy as np
+import sympy as sp
+import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
@@ -9,412 +12,150 @@ from scipy import interpolate as numint
 from st_cytoscape import cytoscape
 from PIL import Image
 
+# Configuracion de la pagina
 st.set_page_config(page_title = "Tesis", page_icon = "🦅", layout = "wide", initial_sidebar_state = "collapsed")
 
-st.markdown("<h1 style='text-align: center; color: black;'>Power System Transmission Calculator</h1>", unsafe_allow_html=True)
-st.markdown("<h6 style='text-align: center; color: black;'>Proyecto de tesis para obtener el grado de Ingeniero Mecánico</h1>", unsafe_allow_html=True)
-st.markdown("<h6 style='text-align: center; color: black;'>Universidad Nacional de San Agustin</h1>", unsafe_allow_html=True)
-st.markdown("<h6 style='text-align: center; color: black;'>Arequipa - 2023</h1>", unsafe_allow_html=True)
-st.divider()
+# Funciones 
+def f1_rpm(ne, tpo):
+     if tpo == 'Escalonado':
+          x1 = np.array([0, 300, 300, 700, 700, 800, 800, 700, 700, 300, 300, 0, 0])
+          y1 = np.array([-50, -50, -125/2, -125/2, -50, -50, 50, 50, 125/2, 125/2, 50, 50, -50])
+          x3 = np.array([0,0.0222,0.0444,0.0667,0.0889,0.1111,0.1333,0.1556,0.1778,0.2,0.2,0.2111,0.2222,0.2333,0.2444,0.2556,0.2667,0.2778,0.2889,0.3,0.3,0.3222,0.3444,0.3667,0.3889,0.4111,0.4333,0.4556,0.4778,0.5,0.5,0.5222,0.5444,0.5667,0.5889,0.6111,0.6333,0.6556,0.6778,0.7,0.7,0.7111,0.7222,0.7333,0.7444,0.7556,0.7667,0.7778,0.7889,0.8]) * 1000
+          y3 = np.array([0,-0.000015454,-0.000030746,-0.000045714,-0.000060195,-0.000074029,-0.000087053,-0.000099105,-0.00011002,-0.00011964,-0.00011964,-0.00012392,-0.00012783,-0.00013135,-0.0001345,-0.00013725,-0.0001396,-0.00014155,-0.00014308,-0.0001442,-0.0001442,-0.00014566,-0.0001464,-0.0001464,-0.00014564,-0.00014409,-0.00014174,-0.00013855,-0.00013452,-0.00012961,-0.00012961,-0.00012382,-0.00011719,-0.00010981,-0.00010173,-0.00009302,-0.000083746,-0.000073973,-0.00006377,-0.000053201,-0.000053201,-0.000047749,-0.000042135,-0.000036379,-0.000030501,-0.000024522,-0.000018463,-0.000012342,-0.0000061812,-1.5847e-19]) * 1000 * 300 
+          dt = np.array([100, 125, 100])
+          lt = np.array([300, 400, 100])
+          ls = np.array([0, 300, 700])
+          nt = np.array([0, 300, 700, 800])
 
-file_1   = open(r'Imagenes/Logo.gif', "rb")
-content1 = file_1.read()
-dataurl1 = base64.b64encode(content1).decode("utf-8")
-file_1.close()
+          x  = sp.symbols('x')
+          f1 = (10737418240000 * x ** 3) / 4364154382556341 - (76005888753664 * x) / 109103859563908525;
+          f2 = (10737418240000 * x ** 3) / 13092463147669023 + (4294967296000 * x ** 2) / 4364154382556341 - (97480725233664 * x) / 109103859563908525 + 171798691840 / 13092463147669023;
+          f3 = (536870912000 * x ** 3) / 1598201067830691 + (214748364800 * x ** 2) / 532733689276897 - (220609904640 * x) / 532733689276897 - 5701196854941011 / 87283087651126804480;
+          f4 = - (536870912000 * x ** 3) / 532733689276897 + (1288490188800 * x ** 2) / 532733689276897 - (757480816640 * x) / 532733689276897 + 54681141248 / 532733689276897;
+          f5 = - (10737418240000 * x ** 3) / 4364154382556341 + (25769803776000 * x ** 2) / 4364154382556341 - (2327897013443625 * x) / 558611760967211648 + 7279083635225919/8937788175475386368;
+          f  = [f1, f2, f3, f4, f5]
+          p  = 7830.992242436808
+          a  = np.pi * np.array([0.05, 0.05, 0.0625, 0.0625, 0.05]) ** 2
+          li = np.array([0, 200, 300, 500, 700, 800]) / 1000
+     else:
+          x5 = np.array([0, 1500, 1500, 0, 0])
+          y5 = np.array([-15, -15, 15, 15, -15])
+          x1 = np.array([0, 1500, 1500, 0, 0])
+          y1 = np.array([-25, -25, 25, 25, -25])
+          x3 = np.array([0,0.0455,0.0909,0.1364,0.1818,0.2273,0.2727,0.3182,0.3636,0.4091,0.4545,0.5,0.5545,0.6091,0.6636,0.7182,0.7727,0.8273,0.8818,0.9364,0.9909,1.0455,1.1,1.1364,1.1727,1.2091,1.2455,1.2818,1.3182,1.3545,1.3909,1.4273,1.4636,1.5]) * 1000
+          y3 = np.array([0,0.000046398,0.000092427,0.00013772,0.00018191,0.00022463,0.00026551,0.00030417,0.00034027,0.00037342,0.00040325,0.00042941,0.00045552,0.00047577,0.0004901,0.00049849,0.00050088,0.00049725,0.00048755,0.00047175,0.00044979,0.00042165,0.00038729,0.00036094,0.00033206,0.00030091,0.00026772,0.00023277,0.00019629,0.00015855,0.0001198,0.00008029,0.000040272,4.2574e-20]) * 1000 * 40 * -1
+          dt = np.array([50, 50, 50])
+          lt = np.array([500, 500, 500])
+          ls = np.array([0, 500, 1000])
+          nt = np.array([0, 500, 1000, 1500])
 
-col1, col2 = st.columns([1.5, 1], gap = 'large')
-col1.header('Resumen')
-col1.markdown('''<div style="text-align: justify;">
-     El presente proyecto de investigación se realizo con la finalidad de optimizar el proceso de diseño de un
-     sistema de transmisión de potencia como el que se muestra en la imagen. Para ello se analizaron los
-     componentes generales de dichos sistemas, tales como las correas, cadenas, engranajes, ejes y chavetas,
-     en base a las distintas metodologias, criterios y normativas que existen en la actualidad.  \nUna vez establecido 
-     el proceso de calculo para cada uno de ellos, se desarrollo una interfaz gráfica para que el usuario pueda
-     mejorar su diseño mediante la variación de los parametros iniciales del sistema.  \nComo resultado final se
-     creó Power System Transmission Calculator, una aplicación informática que permite cálcular los componentes previamente
-     mencionados, de manera rapida, precisa y optima, cumpliendo asi con el proposito establecido en el proyecto de investigación.
-</div>''', unsafe_allow_html = True)
-col2.markdown(f'<img src = "data:image/gif;base64,{dataurl1}" width = "450">', unsafe_allow_html = True)
+          x  = sp.symbols('x')
+          f  = -0.0003041661947726438 * x ** 4 + 0.0009774450338568947 * x ** 3 - 0.00010769849260722366 * x ** 2 - 0.001009531675784642 * x - 3.392350409868671e-7
+          p  = 7830.992242436808
+          a  = np.pi * ((0.05 * 0.03) / 2) ** 2
+          li = np.array([0, 500, 1100, 1500]) / 1000
 
-st.header('Marco Teórico')
+     nc = ne - 1
+     tc = np.array([])
+     dc = np.array([])
+     tp = np.array([])
+     x2 = np.zeros((2, nc * 3))
+     y2 = np.zeros((2, nc * 3))
+     y4 = np.zeros((4, ne * 3))
+     tv = np.array([])
+     for i in range(3):
+          nl = lt[i] / (nc + 1)
+          lc = np.arange(1, nc + 1) * nl + ls[i]
+          pe = np.arange(0, nc + 1) * nl + np.repeat(nl / 2, nc + 1) + ls[i]
+          tc = np.concatenate((tc, lc))
+          tp = np.concatenate((tp, pe))
+          dc = np.concatenate((dc, np.repeat(dt[i] / 2, nc)))
+          vo = np.repeat((np.pi * nl * dt[i] ** 2) / 4, ne)
+          tv = np.concatenate((tv, vo))
+     x2[0, :] = tc; x2[1, :] = tc
+     y2[0, :] = dc; y2[1, :] = -dc
+     x4 = np.repeat(np.sort(np.concatenate((tc, nt))), 4)[2:-2].reshape((4, ne * 3), order = 'F')
+     y4[1, :] = np.interp(tp, x3, y3); y4[2, :] = np.interp(tp, x3, y3)
+     centro_masa = tp / 1000
+     volumen     = tv / 1e9
+     peso        = 7830.992242436808 * volumen * 9.81
+     sum1 = 0
+     sum2 = 0
 
-elements1 = [
-    {"data": {"id": "n1", "label": "•Potencia\n•R.P.M\n•Diametros de las poleas\n•Distancia entre las poleas"}, "selectable": False},
-    {"data": {"id": "n2", "label": "•Angulos de contacto\n•Velocidad de la correa\n•Fuerza tangencial a transmitir\n•Factores\n•Perfil"}, "selectable": False},
-    {"data": {"id": "n3", "label": "•Dimensiones de\nla correa"}, "selectable": False},
-    {"data": {"id": "n4", "label": "•Fuerzas y momentos\nsobre el eje"}, "selectable": False},
-    {"data": {"source": "n1", "target": "n2"}},
-    {"data": {"source": "n2", "target": "n3"}},
-    {"data": {"source": "n2", "target": "n4"}},
-]
-layout1 = {
-    "name": "preset",
-    "positions": {  
-        "n1": {"x": -500, "y": 50},
-        "n2": {"x": -200, "y": 50},
-        "n3": {"x": 100, "y": 0},
-        "n4": {"x": 100, "y": 100},
-    }
-}
-stylesheet1 = [
-    {"selector": "node", "style": {"label": "data(label)", "text-wrap": "wrap", "width": 10, "height": 10, "shape": "circle"}},
-    {"selector": "edge", "style": {"width": 2, "curve-style": "bezier", "target-arrow-shape": "triangle"}},
-]
-elements2 = [
-    {"data": {"id": "n1", "label": "•Potencia\n•R.P.M\n•Diametros de las poleas\n•Distancia entre las poleas"}, "selectable": False},
-    {"data": {"id": "n2", "label": "•Angulos de contacto\n•Velocidad de la correa\n•Fuerza tangencial a transmitir\n•Factores\n•Perfil"}, "selectable": False},
-    {"data": {"id": "n3", "label": "•Dimensiones de\nla correa"}, "selectable": False},
-    {"data": {"id": "n4", "label": "•Número de\ncorreas"}, "selectable": False},
-    {"data": {"id": "n5", "label": "•Fuerzas y momentos\nsobre el eje"}, "selectable": False},
-    {"data": {"source": "n1", "target": "n2"}},
-    {"data": {"source": "n2", "target": "n3"}},
-    {"data": {"source": "n2", "target": "n4"}},
-    {"data": {"source": "n2", "target": "n5"}},
-]
-layout2 = {
-    "name": "preset",
-    "positions": {  
-        "n1": {"x": -500, "y": 50},
-        "n2": {"x": -200, "y": 50},
-        "n3": {"x": 100, "y": 0},
-        "n4": {"x": 100, "y": 50},
-        "n5": {"x": 100, "y": 100},
-    }
-}
-stylesheet2 = [
-    {"selector": "node", "style": {"label": "data(label)", "text-wrap": "wrap", "width": 10, "height": 10, "shape": "circle"}},
-    {"selector": "edge", "style": {"width": 2, "curve-style": "bezier", "target-arrow-shape": "triangle"}},
-]
-elements3 = [
-    {"data": {"id": "n1", "label": "•Potencia\n•R.P.M\n•Dientes de los sprockets\n•Distancia entre los sprockets"}, "selectable": False},
-    {"data": {"id": "n2", "label": "•Angulos de contacto\n•Velocidad de la cadena\n•Fuerza tangencial a transmitir\n•Factores\n•Perfil"}, "selectable": False},
-    {"data": {"id": "n3", "label": "•Dimensiones de\nla cadena"}, "selectable": False},
-    {"data": {"id": "n4", "label": "•Número de\ncadenas"}, "selectable": False},
-    {"data": {"id": "n5", "label": "•Fuerzas y momentos\nsobre el eje"}, "selectable": False},
-    {"data": {"source": "n1", "target": "n2"}},
-    {"data": {"source": "n2", "target": "n3"}},
-    {"data": {"source": "n2", "target": "n4"}},
-    {"data": {"source": "n2", "target": "n5"}},
-]
-layout3 = {
-    "name": "preset",
-    "positions": {  
-        "n1": {"x": -500, "y": 50},
-        "n2": {"x": -200, "y": 50},
-        "n3": {"x": 100, "y": 0},
-        "n4": {"x": 100, "y": 50},
-        "n5": {"x": 100, "y": 100},
-    }
-}
-stylesheet3 = [
-    {"selector": "node", "style": {"label": "data(label)", "text-wrap": "wrap", "width": 10, "height": 10, "shape": "circle"}},
-    {"selector": "edge", "style": {"width": 2, "curve-style": "bezier", "target-arrow-shape": "triangle"}},
-]
-elements4 = [
-    {"data": {"id": "n1", "label": "Tratamiento superficial"}, "selectable": False},
-    {"data": {"id": "n2", "label": "Condiciones de operación"}, "selectable": False},
-    {"data": {"id": "n3", "label": "Número de nodos"}, "selectable": False},
-    {"data": {"id": "n4", "label": "Momentos"}, "selectable": False},
-    {"data": {"id": "n5", "label": "Fuerzas"}, "selectable": False},
-    {"data": {"id": "n6", "label": "Tipos de apoyo"}, "selectable": False},
-    {"data": {"id": "n7", "label": "Densidad"}, "selectable": False},
-    {"data": {"id": "n8", "label": "Esfuerzo de rotura"}, "selectable": False},
-    {"data": {"id": "n9", "label": "Esfuerzo de fluencia"}, "selectable": False},
-    {"data": {"id": "n10", "label": "Módulo de rigidez"}, "selectable": False},
-    {"data": {"id": "n11", "label": "Módulo de elasticidad"}, "selectable": False},
-    {"data": {"id": "n12", "label": "Redondeos y similares"}, "selectable": False},
-    {"data": {"id": "n13", "label": "Longitud"}, "selectable": False},
-    {"data": {"id": "n14", "label": "Diámetro externo"}, "selectable": False},
-    {"data": {"id": "n15", "label": "Diámetro interno"}, "selectable": False},
-    {"data": {"id": "n16", "label": "Area"}, "selectable": False},
-    {"data": {"id": "n17", "label": "Momento polar de inercia"}, "selectable": False},
-    {"data": {"id": "n18", "label": "Segundo momento de área"}, "selectable": False},
-    {"data": {"id": "n19", "label": "Primer momento de área"}, "selectable": False},
-    {"data": {"id": "n20", "label": "Esfuerzos dinámicos máximos"}, "selectable": False},
-    {"data": {"id": "n21", "label": "Esfuerzos dinámicos"}, "selectable": False},
-    {"data": {"id": "n22", "label": "Esfuerzos estáticos máximos"}, "selectable": False},
-    {"data": {"id": "n23", "label": "Esfuerzos estáticos"}, "selectable": False},
-    {"data": {"id": "n24", "label": "Desplazamientos"}, "selectable": False},
-    {"data": {"id": "n25", "label": "Reacciones"}, "selectable": False},
-    {"data": {"id": "n26", "label": "Velocidades Críticas"}, "selectable": False},
-    {"data": {"id": "n27", "label": "F.S. dinamicos mínimos"}, "selectable": False},
-    {"data": {"id": "n28", "label": "F.S. dinámicos"}, "selectable": False},
-    {"data": {"id": "n29", "label": "F.S. estáticos mínimos"}, "selectable": False},
-    {"data": {"id": "n30", "label": "F.S. estáticos"}, "selectable": False},
-    {"data": {"source": "n6", "target": "n24"}},
-    {"data": {"source": "n7", "target": "n24"}},
-    {"data": {"source": "n10", "target": "n24"}},
-    {"data": {"source": "n11", "target": "n24"}},
-    {"data": {"source": "n13", "target": "n24"}},
-    {"data": {"source": "n14", "target": "n24"}},
-    {"data": {"source": "n16", "target": "n24"}},
-    {"data": {"source": "n17", "target": "n24"}},
-    {"data": {"source": "n25", "target": "n24"}},
-    {"data": {"source": "n24", "target": "n25"}},
-    {"data": {"source": "n24", "target": "n26"}},
-    {"data": {"source": "n4", "target": "n25"}},
-    {"data": {"source": "n5", "target": "n25"}},
-    {"data": {"source": "n13", "target": "n25"}},
-    {"data": {"source": "n25", "target": "n20"}},
-    {"data": {"source": "n25", "target": "n21"}},
-    {"data": {"source": "n25", "target": "n22"}},
-    {"data": {"source": "n25", "target": "n23"}},
-    {"data": {"source": "n25", "target": "n27"}},
-    {"data": {"source": "n25", "target": "n28"}},
-    {"data": {"source": "n25", "target": "n29"}},
-    {"data": {"source": "n25", "target": "n30"}},
-    {"data": {"source": "n1", "target": "n21"}},
-    {"data": {"source": "n2", "target": "n21"}},
-    {"data": {"source": "n8", "target": "n27"}},
-    {"data": {"source": "n8", "target": "n28"}},
-    {"data": {"source": "n9", "target": "n27"}},
-    {"data": {"source": "n9", "target": "n28"}},
-    {"data": {"source": "n9", "target": "n29"}},
-    {"data": {"source": "n9", "target": "n30"}},
-    {"data": {"source": "n12", "target": "n20"}},
-    {"data": {"source": "n12", "target": "n22"}},
-    {"data": {"source": "n12", "target": "n27"}},
-    {"data": {"source": "n12", "target": "n29"}},
-    {"data": {"source": "n14", "target": "n16"}},
-    {"data": {"source": "n14", "target": "n17"}},
-    {"data": {"source": "n14", "target": "n18"}},
-    {"data": {"source": "n14", "target": "n19"}},
-    {"data": {"source": "n15", "target": "n16"}},
-    {"data": {"source": "n15", "target": "n17"}},
-    {"data": {"source": "n15", "target": "n18"}},
-    {"data": {"source": "n15", "target": "n19"}},
-    {"data": {"source": "n18", "target": "n21"}},
-    {"data": {"source": "n18", "target": "n23"}},
-    {"data": {"source": "n19", "target": "n21"}},
-    {"data": {"source": "n19", "target": "n23"}},
-]
-layout4 = {
-    "name": "preset",
-    "positions": {  
-        "n1": {"x": -500, "y": 0},
-        "n2": {"x": -500, "y": 80},
-        "n3": {"x": -500, "y": 160},
-        "n4": {"x": -500, "y": 240},
-        "n5": {"x": -500, "y": 320},
-        "n6": {"x": -500, "y": 400},
-        "n7": {"x": -200, "y": 40},
-        "n8": {"x": -200, "y": 120},
-        "n9": {"x": -200, "y": 200},
-        "n10": {"x": -200, "y": 280},
-        "n11": {"x": -200, "y": 360},
-        "n12": {"x": 100, "y": 80},
-        "n13": {"x": 100, "y": 160},
-        "n14": {"x": 100, "y": 240},
-        "n15": {"x": 100, "y": 320},
-        "n16": {"x": 400, "y": 80},
-        "n17": {"x": 400, "y": 160},
-        "n18": {"x": 400, "y": 240},
-        "n19": {"x": 400, "y": 320},
-        "n20": {"x": 700, "y": 0},
-        "n21": {"x": 700, "y": 80},
-        "n22": {"x": 700, "y": 160},
-        "n23": {"x": 700, "y": 240},
-        "n24": {"x": 700, "y": 320},
-        "n25": {"x": 700, "y": 400},
-        "n26": {"x": 1000, "y": 40},
-        "n27": {"x": 1000, "y": 120},
-        "n28": {"x": 1000, "y": 200},
-        "n29": {"x": 1000, "y": 280},
-        "n30": {"x": 1000, "y": 360},
-    }
-}
-stylesheet4 = [
-    {"selector": "node", "style": {"label": "data(label)", "text-wrap": "wrap", "width": 220, "height": 30, "shape": "round-rectangle", "text-valign": "center", "text-halign": "center"}},
-    {"selector": "edge", "style": {"width": 2, "curve-style": "unbundled-bezier", "target-arrow-shape": "triangle"}},
-]
+     if tpo == 'Escalonado':
+          for i in range(5):
+               sum1 += p * a[i] * abs(sp.integrate(f[i], (x, li[i], li[i + 1])))
+               sum2 += p * a[i] * abs(sp.integrate(f[i] ** 2, (x, li[i], li[i + 1])))
+          deflexion   = np.interp(tp, x3, y3 / 300) / 1000
+          vel_dun_cla = (30 / np.pi) * np.sqrt(9.81 / max(abs(y3 / 300000)))
+     else:
+          for i in range(3):
+               sum1 += p * a * abs(sp.integrate(f, (x, li[i], li[i + 1])))
+               sum2 += p * a * abs(sp.integrate(f ** 2, (x, li[i], li[i + 1])))
+          deflexion   = np.interp(tp, x3, y3 / 40) / 1000
+          vel_dun_cla = (30 / np.pi) * np.sqrt(9.81 / max(abs(y3 / 40000)))
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(['Correas planas', 'Correas trapezoidales', 'Cadenas', 'Engranajes', 'Ejes de transmisión', 'Chavetas y rodamientos', 'Elementos finitos'])
-with tab1:
-     st.subheader('Correas planas')
-     col7, col8 = st.columns([1,3])
-     with col7:
-          st.image(Image.open(r'Imagenes/forbo.png').resize((600, 800)))
-     with col8:
-          st.markdown('''<div style="text-align: justify;">
-          Se analizan bajo la metodología desarrollada por la empresa Forbo, la cual, mediante datos de entrada 
-          conocidos como la potencia y revoluciones del motor, los diámetros de las poleas y la distancia entre 
-          las mismas, permite calcular las dimensiones del tipo de correa elegida junto con las fuerzas que se 
-          transmitirán al eje de transmisión de potencia.
-          </div>''', unsafe_allow_html = True)
-          st.markdown('#####')
-          with st.expander("Diagrama", expanded = True):
-               cytoscape(elements = elements1, stylesheet = stylesheet1, layout = layout1, selection_type = "single", key = "cyto1", 
-               user_panning_enabled = True, user_zooming_enabled = True, min_zoom = 1, max_zoom = 1.75, width = "100%", height = "220px")
-with tab2:
-     st.subheader('Correas trapezoidales')
-     col9, col10 = st.columns([1,3])
-     with col9:
-          st.image(Image.open(r'Imagenes/optibelt.png').resize((600, 800)))
-     with col10:
-          st.write('''
-          Se analizan bajo la metodología desarrollada por la empresa Optibelt, la cual, mediante datos de 
-          entrada conocidos como la potencia y revoluciones del motor, los diámetros de las poleas y la distancia 
-          entre las mismas, permite calcular el número de correas a emplear, las dimensiones del tipo de correa 
-          elegida junto con las fuerzas que se transmitirán al eje de transmisión de potencia.
-          ''')
-          with st.expander("Diagrama"):
-               cytoscape(elements = elements2, stylesheet = stylesheet2, layout = layout2, selection_type = "single", key = "cyto2", 
-               user_panning_enabled = True, user_zooming_enabled = True, min_zoom = 1, max_zoom = 1.75, width = "100%", height = "220px")
-with tab3:
-     st.subheader('Cadenas')
-     col11, col12 = st.columns([1,3])
-     with col11:
-          st.image(Image.open(r'Imagenes/renold.png').resize((600, 800)))
-     with col12:
-          st.write('''
-          Se analizan bajo la metodología desarrollada por la empresa Renold, la cual, mediante datos de entrada 
-          conocidos como la potencia y revoluciones del motor, el número de dientes de los sprokets y la distancia 
-          entre los mismos, permite calcular el número de cadenas a emplear, las dimensiones del tipo de cadena 
-          elegida junto con las fuerzas que se transmitirán al eje de transmisión de potencia.
-          ''')
-          with st.expander("Diagrama"):
-               cytoscape(elements = elements3, stylesheet = stylesheet3, layout = layout3, selection_type = "single", key = "cyto3", 
-               user_panning_enabled = True, user_zooming_enabled = True, min_zoom = 1, max_zoom = 1.75, width = "100%", height = "220px")
-with tab4:
-     st.subheader('Engranajes')
-     col13, col14 = st.columns([1,3])
-     with col13:
-          st.image(Image.open(r'Imagenes/agma.png').resize((600, 800)))
-     with col14:
-          st.markdown('''
-          Se analizan bajo la norma ANSI / AGMA 2101-D04, en la cual se definen cuatro tipos de fallas, 
-          de las cuales las más importantes son la falla por picadura y la falla por flexión. La aplicación permite el cálculo 
-          de los siguientes tipos de engranajes:
+     vel_ray_cla = (30 / np.pi) * np.sqrt(9.81 * (np.sum(peso * abs(deflexion)) / np.sum(peso * deflexion ** 2)))
+     vel_ray_mod = (30 / np.pi) * sp.sqrt(9.81 * (sum1 / sum2))
+     table_data  = np.zeros((ne * 3, 4)); table_data[:, 0] = centro_masa * 1000; table_data[:, 1] = volumen * 1000000000; table_data[:, 2] = peso; table_data[:, 3] = deflexion * 1000
+     data_frame  = pd.DataFrame(table_data, columns = ["Centro de masa (mm)", "Volumen (mm3)", "Peso (N)", "Deflexión (mm)"])
+     
+     fig, axs = plt.subplots(figsize = (8, 4))
+     axs.plot(x1, y1, color = 'black', linestyle = 'solid', linewidth = 3)
+     axs.plot(x2, y2, color = 'red', linestyle = 'dashed', linewidth = 1)
+     axs.plot(x3, y3, color = 'green', linestyle = 'solid', linewidth = 2)
+     axs.fill(x4, y4, color = 'blue', alpha = 0.3)
+     axs.set_xlabel('x (mm)')
+     axs.set_yticks([])
+     axs.set_ylabel('')
+     axs.spines['top'].set_visible(False)
+     axs.spines['bottom'].set_visible(False)
+     axs.spines['left'].set_visible(False)
+     axs.spines['right'].set_visible(False)
 
-          + Engranajes rectos
-          + Engranajes helicoidales y bihelicoidales
-          + Engranajes conicos rectos
+     if tpo == 'Escalonado':
+          axs.plot(np.array([[300, 700], [300, 700]]), np.array([[50, 50], [-50, -50]]), color = 'red', linestyle = 'dashed', linewidth = 1)
+          axs.text(30, 20, r'$\frac{30}{\pi}\sqrt{\frac{g}{max(\delta_R)}}=$' + str(round(vel_dun_cla, 2)), fontsize = 11)
+          axs.text(500, 30, r'$\frac{30}{\pi}\sqrt{g\frac{\sum m_i y_i}{\sum m_i y_{i}^{2}}}=$' + str(round(vel_ray_cla, 2)), fontsize = 11)
+          axs.text(500, 10, r'$\frac{30}{\pi}\sqrt{g\frac{\sum \rho A\int y_{(x)}dx}{\sum \rho A\int y_{(x)}^{2}dx}}=$' + str(round(vel_ray_mod, 2)), fontsize = 11)
+          axs.text(270, 20, r'$<V.C.R.<$', fontsize = 20)
+     else:
+          axs.plot(x5, y5, color = 'black', linestyle = 'dashed', linewidth = 1)
+          axs.plot(np.array([[500, 1000], [500, 1000]]), np.array([[25, 25], [-25, -25]]), color = 'red', linestyle = 'dashed', linewidth = 1)
+          axs.text(50, 6, r'$\frac{30}{\pi}\sqrt{\frac{g}{max(\delta_R)}}=$' + str(round(vel_dun_cla, 2)), fontsize = 11)
+          axs.text(1000, 10, r'$\frac{30}{\pi}\sqrt{g\frac{\sum m_i y_i}{\sum m_i y_{i}^{2}}}=$' + str(round(vel_ray_cla, 2)), fontsize = 11)
+          axs.text(1000, 3, r'$\frac{30}{\pi}\sqrt{g\frac{\sum \rho A\int y_{(x)}dx}{\sum \rho A\int y_{(x)}^{2}dx}}=$' + str(round(vel_ray_mod, 2)), fontsize = 11)
+          axs.text(550, 6, r'$<V.C.R.<$', fontsize = 20)
 
-          Los cálculos se realizan aplicando las siguientes ecuaciones:
-          ''')
-          st.latex(r'\begin{array}{ccc} & \text{Falla por picadura} & \text{Falla por flexión} \\[6pt] \text{Esfuerzo} & \sigma_h = Z_e\sqrt{\frac{F_t K_o K_v K_s K_h Z_r}{d_{w1}bZ_i}} & \sigma_f = \frac{F_t K_o K_v K_s K_h K_b}{bm_t Y_j} \\[6pt] \text{Esfuerzo admisible} & \sigma_{ha} = \frac{\sigma_{hp}Z_n Z_w}{S_h Y_\theta Y_z} & \sigma_{fa} = \frac{\sigma_{fp}Y_n}{S_f Y_\theta Y_z} \\[6pt] \text{Potencia} & P_{az} = \frac{\pi \omega_1 bZ_i}{6.10^7 K_o K_v K_s K_h Z_r}\left(\frac{d_{w1} \sigma_{hp} Z_n Z_w}{Z_e S_h Y_\theta Y_z}\right)^2 & P_{ay} = \frac{\pi \omega_1 d_{w1} b m_t Y_j \sigma_{fp} Y_n}{6.10^7 K_o K_v K_s K_h K_b S_f Y_\theta Y_z} \end{array}')
-with tab5:
-     col15, col16 = st.columns([1, 3])
-     with col15:
-          st.subheader('Ejes de transmisión')
-          st.image(Image.open(r'Imagenes/jack.png').resize((600, 800)))
-     with col16:
-          with st.expander('Teorías', expanded = True):
-               st.markdown('''
-               + Euler-Bernoulli: No toma en cuenta los efectos de las fuerzas cortantes 
-               en la deformación del eje, por lo que resulta adecuada para ejes largos ($L/D>10$).
-               + Timoshenko: Toma en cuenta los efectos de las fuerzas cortantes 
-               en la deformación del eje, por lo que resulta adecuada para ejes cortos ($L/D<10$). 
-               
-               Independientemente de la teoría que se elija, el analisis del eje se realiza bajo los siguientes criterios:
-               ''')
-               st.latex(r'\small \begin{array}{cccc} \text{Análisis estático} & \text{Análisis dinámico} & \text{Análisis vibracional} & \text{Análisis de rigidez}\\ \hline \\ \text{Von Misses} & \text{Soderberg} & \text{Dunkerley} & \text{Pendientes} \\\\ \text{Tresca} & \text{Goodman} & \text{Rayleigh} & \text{Deflexiones} \\\\ \text{Rankine} & \text{ASME} & & \\ \end{array}')               
-          with st.expander('Diagrama'):
-               cytoscape(elements = elements4, stylesheet = stylesheet4, layout = layout4, selection_type = "single", key = "cyto4", 
-               user_panning_enabled = True, user_zooming_enabled = True, min_zoom = 0.5, max_zoom = 0.75, width = "100%", height = "310px")               
-with tab6:
-     st.subheader('Chavetas')
-     col17, col18 = st.columns([1,3])
-     with col17:
-          st.image(Image.open(r'Imagenes/bandari.png').resize((600, 800)))
-     with col18:
-          st.write('''
-          Se analizan bajo la metodología desarrollada en el libro "Diseño de elementos de máquinas" de Bhandari y unicamente se 
-          computan las chavetas del tipo cuadradas. Por otra parte, los rodamientos se pueden diseñar por medio de una 
-          herramienta gratuita proporcionada por la empresa [SKF](https://www.skfbearingselect.com/#/bearing-selection-start):
-          ''')
-with tab7:
-     st.subheader('Elementos finitos')
-     col19, col20 = st.columns([1,3])
-     with col19:
-          st.image(Image.open(r'Imagenes/logan.png').resize((600, 800)))
-     with col20:
-          st.write('''
-          Se utilzan los elementos triangulares de deformación constante (CST) para el analisis de componentes 
-          bidimensionales sometidos a esfuerzos y deformaciones planas. Para ello, se establecen las siguientes 
-          ecuaciones y matrices que permiten calcular los esfuerzos y deformaciones de cada elemento:
-          ''')
-          st.latex(r'\begin{align*} \beta_i=y_j-y_m \hspace{0.6cm}& \beta_j=y_m-y_i \hspace{0.3cm}& \beta_m=y_i-y_j\\ \gamma_i=x_m-x_j \hspace{0.6cm}& \gamma_j=x_i-x_m \hspace{0.3cm}& \gamma_m=x_j-x_i\\ \end{align*}')
-          st.latex(r'[B]=\frac{1}{2A}\begin{bmatrix} \beta_i & 0 & \beta_j & 0 & \beta_m & 0 \\ 0 & \gamma_i & 0 & \gamma_j & 0 & \gamma_m \\ \gamma_i & \beta_i & \gamma_j & \beta_j & \gamma_m & \beta_m \\ \end{bmatrix} [D] = \frac{E}{1-v^2}\begin{bmatrix} 1 & v & 0 \\ v & 1 & 0 \\ 0 & 0 & \frac{1-v}{2} \\ \end{bmatrix}')
-          st.latex(r'[k]=tA[B]^T[D][B]')
-          st.latex(r'[F]=[K][d] → [\sigma_x, \sigma_y, \tau_{xy}] = [D][B][d]')
+     return fig, data_frame
 
-st.header('Marco Metodológico')
-st.subheader('Correas planas, correas trapezoidales, cadenas y engranajes')
-# plt.close('all')
-x = np.array([5, 15, 25, 35])
-y = np.array([20, 30, 50, 70, 100, 120, 150, 200, 300])
-z = np.array([[0.1100, 0.1110, 0.1120, 0.1160],
-              [0.1140, 0.1158, 0.1190, 0.1240],
-              [0.1240, 0.1255, 0.1280, 0.1315],
-              [0.1300, 0.1310, 0.1330, 0.1355],
-              [0.1350, 0.1358, 0.1375, 0.1389],
-              [0.1370, 0.1379, 0.1390, 0.1405],
-              [0.1400, 0.1407, 0.1415, 0.1424],
-              [0.1420, 0.1425, 0.1430, 0.1435],
-              [0.1449, 0.1450, 0.1452, 0.1450]])
-fx = numint.interp1d([5, 35], [50, 550])
-fy = numint.interp1d([0.11, 0.148], [650, 20])
-fz = numint.interp2d(x, y, z)
-col3, col4 = st.columns([1, 1])
-with col3:
-     with st.form('form1'):
-          st.markdown('''<div style="text-align: justify;">
-               En el proceso de cálculo de estos componentes resulta 
-               indispensable hacer uso de parámetros numéricos exclusivos de cada uno de estos, los cuales por lo general, se representan y determinan 
-               mediante el uso de gráficos y tablas. En este punto, resulta pertinente señalar que, mediante el procesamiento de imágenes se han extraido los datos de las gráficas 
-               correspondientes a cada uno de estos parametros numéricos, para poder representarlos mediante tablas y, posteriormente, mediante 
-               interpolaciones, poder calcular el parámetro numérico deseado de manera rapida y precisa. Para esto último, se hacen uso de las siguientes ecuaciones
-          </div>''', unsafe_allow_html = True)
-          st.markdown('#####')
-          st.latex(r'{x_{{n_{a,b}}}} = \frac{{{x_{{n_{b,a}}}} - {x_{{1_{b,a}}}}}}{{{x_{{2_{b,a}}}} - {x_{{1_{b,a}}}}}}\left( {{x_{{2_{a,b}}}} - {x_{{1_{a,b}}}}} \right) + {x_{{1_{a,b}}}}')
-          st.latex(r'{y_{{n_{a,b}}}} = \frac{{{y_{{n_{b,a}}}} - {y_{{1_{b,a}}}}}}{{{y_{{2_{b,a}}}} - {y_{{1_{b,a}}}}}}\left( {{y_{{2_{a,b}}}} - {y_{{1_{a,b}}}}} \right) + {y_{{1_{a,b}}}}')
-          st.markdown('#####')
-          st.write('Con los parametros numéricos ya tabulados, el cálculo se efectúa como sigue:')
-          x1 = st.slider('Ángulo', 5, 35, 5, 1)
-          y1 = st.slider('Dientes', 20, 300, 20, 1)
-          col5, col6 = st.columns([1.55, 1])
-          with col5:
-               submitted1 = st.form_submit_button("Cálcular factor geométrico")
-          with col6:
-               st.write('El factor geometrico es: ' + str(np.round(fz(x1, y1)[0], 5)))
-          # if submitted1:
-          #      st.write("x1", x1, "y1", y1)
-with col4:
+def f2_img(x1, y1, img1):
+     x  = np.array([5, 15, 25, 35])
+     y  = np.array([20, 30, 50, 70, 100, 120, 150, 200, 300])
+     z  = np.array([[0.1100, 0.1110, 0.1120, 0.1160],
+                    [0.1140, 0.1158, 0.1190, 0.1240],
+                    [0.1240, 0.1255, 0.1280, 0.1315],
+                    [0.1300, 0.1310, 0.1330, 0.1355],
+                    [0.1350, 0.1358, 0.1375, 0.1389],
+                    [0.1370, 0.1379, 0.1390, 0.1405],
+                    [0.1400, 0.1407, 0.1415, 0.1424],
+                    [0.1420, 0.1425, 0.1430, 0.1435],
+                    [0.1449, 0.1450, 0.1452, 0.1450]])
+     fx = numint.interp1d([5, 35], [50, 550])
+     fy = numint.interp1d([0.11, 0.148], [650, 20])
+     fz = numint.interp2d(x, y, z)
+     fg = np.round(fz(x1, y1)[0], 5)
+
      fig1, axe1 = plt.subplots()
-     img1 = mpimg.imread(f'Imagenes/carta1.png')
      axe1.imshow(img1)
      axe1.plot([fx(x1), fx(x1)], [650, 20], 'red', linestyle = 'dashed')
      axe1.plot([50, 550], [fy(fz(x1, y1)), fy(fz(x1, y1))], 'red', linestyle = 'dashed')
      axe1.scatter(fx(x1), fy(fz(x1, y1)), 25, 'red')
      axe1.axis('off')
-     st.pyplot(fig1)
 
-col25, col26 = st.columns([1, 1])
-with col26:
-     with st.form('form2'):
-          st.markdown('''<div style="text-align: justify;">
-          Por otra parte, en la mayoría de casos, la trasmisión de potencia hacia el eje se dará de manera indirecta, es decir, 
-          por medio de corras o cadenas, las cuales podrian ubicarse en distintas configuraciones geométricas.
-          En concecuencia, para efectos de un análisis más realista, las fuerzas que actúan en el eje producto de la transmisión de 
-          potencia, deben de descomponerse en ejes alineados en las direcciones paralela y perpendicular a la gravedad. Los ángulos 
-          de descomposición son:
-          </div>''', unsafe_allow_html = True)
-          st.latex(r'\beta = 90 + \varphi  - \phi \hspace{3mm} \text{y} \hspace{3mm} \alpha = 2\varphi - \beta')
-          st.latex(r'\text{donde} \hspace{10mm} \phi = \cos^{-1} \left( \frac{R - r}{a} \right)')
-          col27, col28 = st.columns([1,1])
-          with col27:
-               rme = st.number_input('Radio menor (r)', 0.0, 1.05, 0.2, 0.05)
-               rma = st.number_input('Radio mayor (R)', 0.0, 1.05, 0.1, 0.05)
-               submitted2 = st.form_submit_button('Cálcular ángulos')
-          with col28:
-               lon = st.number_input('Distancia entre centros (a)', 0.0, 1.05, 0.4, 0.05)
-               phi = st.number_input('Angulo de desfase (𝜑)', 0, 360, 45, 1)
-          st.markdown('''<div style="text-align: justify;">
-          Al momento de efectuar la descomposición de las fuerzas sobre el eje debe de tenerse en cuenta el sentido de giro del motor.
-          </div>''', unsafe_allow_html = True)
-          st.markdown('#####')
-with col25:
+     return fg, fig1
+
+def f3_des(rme, rma, lon, phi):
      tetha = np.linspace(0, 2 * np.pi, 50)
      x1 = 0
      y1 = 0
@@ -454,6 +195,9 @@ with col25:
      else:
           x8 = x2 - rma / (np.sqrt(m2 ** 2 + 1))
           y8 = y2 - (m2 * rma) / np.sqrt(m2 ** 2 + 1)
+     beta = np.round(np.arctan(m1) * (180 / np.pi), 2)
+     alpa = np.round(np.arctan(m2) * (180 / np.pi), 2)
+
      fig2, axe2 = plt.subplots()
      axe2.plot(x1 + rme * np.cos(tetha), y1 + rme * np.sin(tetha), 'black')
      axe2.plot(x2 + rma * np.cos(tetha), y2 + rma * np.sin(tetha), 'black')
@@ -467,12 +211,433 @@ with col25:
      axe2.set_ylim([-lon - 1.1 * rma, lon + 1.1 * rma])
      axe2.set_aspect('equal', adjustable = 'box')
      axe2.axis('off')
-     st.pyplot(fig2, use_container_width = True)
-beta = np.round(np.arctan(m1) * (180 / np.pi), 2)
-alpa = np.round(np.arctan(m2) * (180 / np.pi), 2)
-col28.markdown(f':red[$\large β = {beta}$] $\qquad$ :blue[$\large α = {alpa}$]')
+     
+     return fig2, beta, alpa
+@st.cache_data
+def f4_loa(resources):
+     file_1   = open(r'Imagenes/Logo.gif', "rb")
+     content1 = file_1.read()
+     gif1     = base64.b64encode(content1).decode("utf-8")
+     file_1.close()
 
+     img1 = Image.open(r'Imagenes/forbo.png')
+     img2 = Image.open(r'Imagenes/optibelt.png')
+     img3 = Image.open(r'Imagenes/renold.png')
+     img4 = Image.open(r'Imagenes/agma.png')
+     img5 = Image.open(r'Imagenes/jack.png')
+     img6 = Image.open(r'Imagenes/bandari.png')
+     img7 = Image.open(r'Imagenes/logan.png')
+     img8 = Image.open(r'Imagenes/maxelem.jpg')
+     img9 = Image.open(r'Imagenes/maxelem1.jpg')
+     img10 = Image.open(r'Imagenes/esfuerzoscf.jpg')
+     img11 = Image.open(r'Imagenes/elem4.png')
+     img12 = Image.open(r'Imagenes/FotografiaJR.png')
+
+     imgn = mpimg.imread(f'Imagenes/carta1.png')
+
+     return gif1, img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11, img12, imgn
+@st.cache_data
+def f5_cyt(resources):
+     elements1 = [
+     {"data": {"id": "n1", "label": "•Potencia\n•R.P.M\n•Diametros de las poleas\n•Distancia entre las poleas"}, "selectable": False},
+     {"data": {"id": "n2", "label": "•Angulos de contacto\n•Velocidad de la correa\n•Fuerza tangencial a transmitir\n•Factores\n•Perfil"}, "selectable": False},
+     {"data": {"id": "n3", "label": "•Dimensiones de\nla correa"}, "selectable": False},
+     {"data": {"id": "n4", "label": "•Fuerzas y momentos\nsobre el eje"}, "selectable": False},
+     {"data": {"source": "n1", "target": "n2"}},
+     {"data": {"source": "n2", "target": "n3"}},
+     {"data": {"source": "n2", "target": "n4"}},
+     ]
+     layout1 = {
+     "name": "preset",
+     "positions": {  
+          "n1": {"x": -500, "y": 50},
+          "n2": {"x": -200, "y": 50},
+          "n3": {"x": 100, "y": 0},
+          "n4": {"x": 100, "y": 100},
+     }
+     }
+     stylesheet1 = [
+     {"selector": "node", "style": {"label": "data(label)", "text-wrap": "wrap", "width": 10, "height": 10, "shape": "circle"}},
+     {"selector": "edge", "style": {"width": 2, "curve-style": "bezier", "target-arrow-shape": "triangle"}},
+     ]
+     elements2 = [
+     {"data": {"id": "n1", "label": "•Potencia\n•R.P.M\n•Diametros de las poleas\n•Distancia entre las poleas"}, "selectable": False},
+     {"data": {"id": "n2", "label": "•Angulos de contacto\n•Velocidad de la correa\n•Fuerza tangencial a transmitir\n•Factores\n•Perfil"}, "selectable": False},
+     {"data": {"id": "n3", "label": "•Dimensiones de\nla correa"}, "selectable": False},
+     {"data": {"id": "n4", "label": "•Número de\ncorreas"}, "selectable": False},
+     {"data": {"id": "n5", "label": "•Fuerzas y momentos\nsobre el eje"}, "selectable": False},
+     {"data": {"source": "n1", "target": "n2"}},
+     {"data": {"source": "n2", "target": "n3"}},
+     {"data": {"source": "n2", "target": "n4"}},
+     {"data": {"source": "n2", "target": "n5"}},
+     ]
+     layout2 = {
+     "name": "preset",
+     "positions": {  
+          "n1": {"x": -500, "y": 50},
+          "n2": {"x": -200, "y": 50},
+          "n3": {"x": 100, "y": 0},
+          "n4": {"x": 100, "y": 50},
+          "n5": {"x": 100, "y": 100},
+     }
+     }
+     stylesheet2 = [
+     {"selector": "node", "style": {"label": "data(label)", "text-wrap": "wrap", "width": 10, "height": 10, "shape": "circle"}},
+     {"selector": "edge", "style": {"width": 2, "curve-style": "bezier", "target-arrow-shape": "triangle"}},
+     ]
+     elements3 = [
+     {"data": {"id": "n1", "label": "•Potencia\n•R.P.M\n•Dientes de los sprockets\n•Distancia entre los sprockets"}, "selectable": False},
+     {"data": {"id": "n2", "label": "•Angulos de contacto\n•Velocidad de la cadena\n•Fuerza tangencial a transmitir\n•Factores\n•Perfil"}, "selectable": False},
+     {"data": {"id": "n3", "label": "•Dimensiones de\nla cadena"}, "selectable": False},
+     {"data": {"id": "n4", "label": "•Número de\ncadenas"}, "selectable": False},
+     {"data": {"id": "n5", "label": "•Fuerzas y momentos\nsobre el eje"}, "selectable": False},
+     {"data": {"source": "n1", "target": "n2"}},
+     {"data": {"source": "n2", "target": "n3"}},
+     {"data": {"source": "n2", "target": "n4"}},
+     {"data": {"source": "n2", "target": "n5"}},
+     ]
+     layout3 = {
+     "name": "preset",
+     "positions": {  
+          "n1": {"x": -500, "y": 50},
+          "n2": {"x": -200, "y": 50},
+          "n3": {"x": 100, "y": 0},
+          "n4": {"x": 100, "y": 50},
+          "n5": {"x": 100, "y": 100},
+     }
+     }
+     stylesheet3 = [
+     {"selector": "node", "style": {"label": "data(label)", "text-wrap": "wrap", "width": 10, "height": 10, "shape": "circle"}},
+     {"selector": "edge", "style": {"width": 2, "curve-style": "bezier", "target-arrow-shape": "triangle"}},
+     ]
+     elements4 = [
+     {"data": {"id": "n1", "label": "Tratamiento superficial"}, "selectable": False},
+     {"data": {"id": "n2", "label": "Condiciones de operación"}, "selectable": False},
+     {"data": {"id": "n3", "label": "Número de nodos"}, "selectable": False},
+     {"data": {"id": "n4", "label": "Momentos"}, "selectable": False},
+     {"data": {"id": "n5", "label": "Fuerzas"}, "selectable": False},
+     {"data": {"id": "n6", "label": "Tipos de apoyo"}, "selectable": False},
+     {"data": {"id": "n7", "label": "Densidad"}, "selectable": False},
+     {"data": {"id": "n8", "label": "Esfuerzo de rotura"}, "selectable": False},
+     {"data": {"id": "n9", "label": "Esfuerzo de fluencia"}, "selectable": False},
+     {"data": {"id": "n10", "label": "Módulo de rigidez"}, "selectable": False},
+     {"data": {"id": "n11", "label": "Módulo de elasticidad"}, "selectable": False},
+     {"data": {"id": "n12", "label": "Redondeos y similares"}, "selectable": False},
+     {"data": {"id": "n13", "label": "Longitud"}, "selectable": False},
+     {"data": {"id": "n14", "label": "Diámetro externo"}, "selectable": False},
+     {"data": {"id": "n15", "label": "Diámetro interno"}, "selectable": False},
+     {"data": {"id": "n16", "label": "Area"}, "selectable": False},
+     {"data": {"id": "n17", "label": "Momento polar de inercia"}, "selectable": False},
+     {"data": {"id": "n18", "label": "Segundo momento de área"}, "selectable": False},
+     {"data": {"id": "n19", "label": "Primer momento de área"}, "selectable": False},
+     {"data": {"id": "n20", "label": "Esfuerzos dinámicos máximos"}, "selectable": False},
+     {"data": {"id": "n21", "label": "Esfuerzos dinámicos"}, "selectable": False},
+     {"data": {"id": "n22", "label": "Esfuerzos estáticos máximos"}, "selectable": False},
+     {"data": {"id": "n23", "label": "Esfuerzos estáticos"}, "selectable": False},
+     {"data": {"id": "n24", "label": "Desplazamientos"}, "selectable": False},
+     {"data": {"id": "n25", "label": "Reacciones"}, "selectable": False},
+     {"data": {"id": "n26", "label": "Velocidades Críticas"}, "selectable": False},
+     {"data": {"id": "n27", "label": "F.S. dinamicos mínimos"}, "selectable": False},
+     {"data": {"id": "n28", "label": "F.S. dinámicos"}, "selectable": False},
+     {"data": {"id": "n29", "label": "F.S. estáticos mínimos"}, "selectable": False},
+     {"data": {"id": "n30", "label": "F.S. estáticos"}, "selectable": False},
+     {"data": {"source": "n6", "target": "n24"}},
+     {"data": {"source": "n7", "target": "n24"}},
+     {"data": {"source": "n10", "target": "n24"}},
+     {"data": {"source": "n11", "target": "n24"}},
+     {"data": {"source": "n13", "target": "n24"}},
+     {"data": {"source": "n14", "target": "n24"}},
+     {"data": {"source": "n16", "target": "n24"}},
+     {"data": {"source": "n17", "target": "n24"}},
+     {"data": {"source": "n25", "target": "n24"}},
+     {"data": {"source": "n24", "target": "n25"}},
+     {"data": {"source": "n24", "target": "n26"}},
+     {"data": {"source": "n4", "target": "n25"}},
+     {"data": {"source": "n5", "target": "n25"}},
+     {"data": {"source": "n13", "target": "n25"}},
+     {"data": {"source": "n25", "target": "n20"}},
+     {"data": {"source": "n25", "target": "n21"}},
+     {"data": {"source": "n25", "target": "n22"}},
+     {"data": {"source": "n25", "target": "n23"}},
+     {"data": {"source": "n25", "target": "n27"}},
+     {"data": {"source": "n25", "target": "n28"}},
+     {"data": {"source": "n25", "target": "n29"}},
+     {"data": {"source": "n25", "target": "n30"}},
+     {"data": {"source": "n1", "target": "n21"}},
+     {"data": {"source": "n2", "target": "n21"}},
+     {"data": {"source": "n8", "target": "n27"}},
+     {"data": {"source": "n8", "target": "n28"}},
+     {"data": {"source": "n9", "target": "n27"}},
+     {"data": {"source": "n9", "target": "n28"}},
+     {"data": {"source": "n9", "target": "n29"}},
+     {"data": {"source": "n9", "target": "n30"}},
+     {"data": {"source": "n12", "target": "n20"}},
+     {"data": {"source": "n12", "target": "n22"}},
+     {"data": {"source": "n12", "target": "n27"}},
+     {"data": {"source": "n12", "target": "n29"}},
+     {"data": {"source": "n14", "target": "n16"}},
+     {"data": {"source": "n14", "target": "n17"}},
+     {"data": {"source": "n14", "target": "n18"}},
+     {"data": {"source": "n14", "target": "n19"}},
+     {"data": {"source": "n15", "target": "n16"}},
+     {"data": {"source": "n15", "target": "n17"}},
+     {"data": {"source": "n15", "target": "n18"}},
+     {"data": {"source": "n15", "target": "n19"}},
+     {"data": {"source": "n18", "target": "n21"}},
+     {"data": {"source": "n18", "target": "n23"}},
+     {"data": {"source": "n19", "target": "n21"}},
+     {"data": {"source": "n19", "target": "n23"}},
+     ]
+     layout4 = {
+     "name": "preset",
+     "positions": {  
+          "n1": {"x": -500, "y": 0},
+          "n2": {"x": -500, "y": 80},
+          "n3": {"x": -500, "y": 160},
+          "n4": {"x": -500, "y": 240},
+          "n5": {"x": -500, "y": 320},
+          "n6": {"x": -500, "y": 400},
+          "n7": {"x": -200, "y": 40},
+          "n8": {"x": -200, "y": 120},
+          "n9": {"x": -200, "y": 200},
+          "n10": {"x": -200, "y": 280},
+          "n11": {"x": -200, "y": 360},
+          "n12": {"x": 100, "y": 80},
+          "n13": {"x": 100, "y": 160},
+          "n14": {"x": 100, "y": 240},
+          "n15": {"x": 100, "y": 320},
+          "n16": {"x": 400, "y": 80},
+          "n17": {"x": 400, "y": 160},
+          "n18": {"x": 400, "y": 240},
+          "n19": {"x": 400, "y": 320},
+          "n20": {"x": 700, "y": 0},
+          "n21": {"x": 700, "y": 80},
+          "n22": {"x": 700, "y": 160},
+          "n23": {"x": 700, "y": 240},
+          "n24": {"x": 700, "y": 320},
+          "n25": {"x": 700, "y": 400},
+          "n26": {"x": 1000, "y": 40},
+          "n27": {"x": 1000, "y": 120},
+          "n28": {"x": 1000, "y": 200},
+          "n29": {"x": 1000, "y": 280},
+          "n30": {"x": 1000, "y": 360},
+     }
+     }
+     stylesheet4 = [
+     {"selector": "node", "style": {"label": "data(label)", "text-wrap": "wrap", "width": 220, "height": 30, "shape": "round-rectangle", "text-valign": "center", "text-halign": "center"}},
+     {"selector": "edge", "style": {"width": 2, "curve-style": "unbundled-bezier", "target-arrow-shape": "triangle"}},
+     ]
+     return elements1, layout1, stylesheet1, elements2, layout2, stylesheet2, elements3, layout3, stylesheet3, elements4, layout4, stylesheet4
+
+# Se cargan las imagenes y los datos para los diagramas
+gif1, img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11, img12, imgn = f4_loa('resources')
+elements1, layout1, stylesheet1, elements2, layout2, stylesheet2, elements3, layout3, stylesheet3, elements4, layout4, stylesheet4 = f5_cyt('resoruces')
+
+# Titulo y encabezado
+st.markdown("<h1 style='text-align: center; color: black;'>Power System Transmission Calculator</h1>", unsafe_allow_html = True)
+st.markdown("<h6 style='text-align: center; color: black;'>Proyecto de tesis para obtener el grado de Ingeniero Mecánico</h1>", unsafe_allow_html = True)
+st.markdown("<h6 style='text-align: center; color: black;'>Universidad Nacional de San Agustin</h1>", unsafe_allow_html = True)
+st.markdown("<h6 style='text-align: center; color: black;'>Arequipa - 2023</h1>", unsafe_allow_html = True)
+st.divider()
+
+# Resumen
+col1, col2 = st.columns([1.5, 1], gap = 'large')
+with col1:
+     st.header('Resumen')
+     st.markdown('''<div style="text-align: justify;">
+          El presente proyecto de investigación se realizo con la finalidad de optimizar el proceso de diseño de un
+          sistema de transmisión de potencia como el que se muestra en la imagen. Para ello se analizaron los
+          componentes generales de dichos sistemas, tales como las correas, cadenas, engranajes, ejes y chavetas,
+          en base a las distintas metodologias, criterios y normativas que existen en la actualidad.  \nUna vez establecido 
+          el proceso de calculo para cada uno de ellos, se desarrollo una interfaz gráfica para que el usuario pueda
+          mejorar su diseño mediante la variación de los parametros iniciales del sistema.  \nComo resultado final se
+          creó Power System Transmission Calculator, una aplicación informática que permite cálcular los componentes previamente
+          mencionados, de manera rapida, precisa y optima, cumpliendo asi con el proposito establecido en el proyecto de investigación.
+     </div>''', unsafe_allow_html = True)
+with col2:
+     st.markdown(f'<img src = "data:image/gif;base64,{gif1}" width = "450">', unsafe_allow_html = True)
+
+# Marco Teorico
+st.header('Marco Teórico')
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(['Correas planas', 'Correas trapezoidales', 'Cadenas', 'Engranajes', 'Ejes de transmisión', 'Chavetas y rodamientos', 'Elementos finitos'])
+# Correas planas
+with tab1:
+     st.subheader('Correas planas')
+     col7, col8 = st.columns([1,3])
+     with col7:
+          st.image(img1.resize((600, 800)))
+     with col8:
+          st.markdown('''<div style="text-align: justify;">
+               Se analizan bajo la metodología desarrollada por la empresa Forbo, la cual, mediante datos de entrada 
+               conocidos como la potencia y revoluciones del motor, los diámetros de las poleas y la distancia entre 
+               las mismas, permite calcular las dimensiones del tipo de correa elegida junto con las fuerzas que se 
+               transmitirán al eje de transmisión de potencia.
+          </div>''', unsafe_allow_html = True)
+          st.markdown('#####')
+          with st.expander("Diagrama", expanded = True):
+               cytoscape(elements = elements1, stylesheet = stylesheet1, layout = layout1, selection_type = "single", key = "cyto1", 
+               user_panning_enabled = True, user_zooming_enabled = True, min_zoom = 1, max_zoom = 1.75, width = "100%", height = "220px")
+# Correas trapezoidales
+with tab2:
+     st.subheader('Correas trapezoidales')
+     col9, col10 = st.columns([1,3])
+     with col9:
+          st.image(img2.resize((600, 800)))
+     with col10:
+          st.write('''
+               Se analizan bajo la metodología desarrollada por la empresa Optibelt, la cual, mediante datos de 
+               entrada conocidos como la potencia y revoluciones del motor, los diámetros de las poleas y la distancia 
+               entre las mismas, permite calcular el número de correas a emplear, las dimensiones del tipo de correa 
+               elegida junto con las fuerzas que se transmitirán al eje de transmisión de potencia.
+          ''')
+          with st.expander("Diagrama"):
+               cytoscape(elements = elements2, stylesheet = stylesheet2, layout = layout2, selection_type = "single", key = "cyto2", 
+               user_panning_enabled = True, user_zooming_enabled = True, min_zoom = 1, max_zoom = 1.75, width = "100%", height = "220px")
+# Cadenas
+with tab3:
+     st.subheader('Cadenas')
+     col11, col12 = st.columns([1,3])
+     with col11:
+          st.image(img3.resize((600, 800)))
+     with col12:
+          st.write('''
+               Se analizan bajo la metodología desarrollada por la empresa Renold, la cual, mediante datos de entrada 
+               conocidos como la potencia y revoluciones del motor, el número de dientes de los sprokets y la distancia 
+               entre los mismos, permite calcular el número de cadenas a emplear, las dimensiones del tipo de cadena 
+               elegida junto con las fuerzas que se transmitirán al eje de transmisión de potencia.
+          ''')
+          with st.expander("Diagrama"):
+               cytoscape(elements = elements3, stylesheet = stylesheet3, layout = layout3, selection_type = "single", key = "cyto3", 
+               user_panning_enabled = True, user_zooming_enabled = True, min_zoom = 1, max_zoom = 1.75, width = "100%", height = "220px")
+# Engranajes
+with tab4:
+     st.subheader('Engranajes')
+     col13, col14 = st.columns([1,3])
+     with col13:
+          st.image(img4.resize((600, 800)))
+     with col14:
+          st.markdown('''
+               Se analizan bajo la norma ANSI / AGMA 2101-D04, en la cual se definen cuatro tipos de fallas, 
+               de las cuales las más importantes son la falla por picadura y la falla por flexión. La aplicación permite el cálculo 
+               de los siguientes tipos de engranajes:
+
+               + Engranajes rectos
+               + Engranajes helicoidales y bihelicoidales
+               + Engranajes conicos rectos
+
+               Los cálculos se realizan aplicando las siguientes ecuaciones:
+          ''')
+          st.latex(r'\begin{array}{c|cc} & \text{Falla por picadura} & \text{Falla por flexión} \\\hline \\ \text{Esfuerzo} & \sigma_h = Z_e\sqrt{\frac{F_t K_o K_v K_s K_h Z_r}{d_{w1}bZ_i}} & \sigma_f = \frac{F_t K_o K_v K_s K_h K_b}{bm_t Y_j} \\ \text{Esfuerzo admisible} & \sigma_{ha} = \frac{\sigma_{hp}Z_n Z_w}{S_h Y_\theta Y_z} & \sigma_{fa} = \frac{\sigma_{fp}Y_n}{S_f Y_\theta Y_z} \\ \text{Potencia} & P_{az} = \frac{\pi \omega_1 bZ_i}{6.10^7 K_o K_v K_s K_h Z_r}\left(\frac{d_{w1} \sigma_{hp} Z_n Z_w}{Z_e S_h Y_\theta Y_z}\right)^2 & P_{ay} = \frac{\pi \omega_1 d_{w1} b m_t Y_j \sigma_{fp} Y_n}{6.10^7 K_o K_v K_s K_h K_b S_f Y_\theta Y_z} \end{array}')
+# Ejes
+with tab5:
+     col15, col16 = st.columns([1, 3])
+     with col15:
+          st.subheader('Ejes de transmisión')
+          st.image(img5.resize((600, 800)))
+     with col16:
+          with st.expander('Teorías', expanded = True):
+               st.markdown('''
+                    + Euler-Bernoulli: No toma en cuenta los efectos de las fuerzas cortantes 
+                    en la deformación del eje, por lo que resulta adecuada para ejes largos ($L/D>10$).
+                    + Timoshenko: Toma en cuenta los efectos de las fuerzas cortantes 
+                    en la deformación del eje, por lo que resulta adecuada para ejes cortos ($L/D<10$). 
+                    
+                    Independientemente de la teoría que se elija, el analisis del eje se realiza bajo los siguientes criterios:
+               ''')
+               st.latex(r'\small \begin{array}{cccc} \text{Análisis estático} & \text{Análisis dinámico} & \text{Análisis vibracional} & \text{Análisis de rigidez}\\ \hline \\ \text{Von Misses} & \text{Soderberg} & \text{Dunkerley} & \text{Pendientes} \\\\ \text{Tresca} & \text{Goodman} & \text{Rayleigh} & \text{Deflexiones} \\\\ \text{Rankine} & \text{ASME} & & \\ \end{array}')               
+          with st.expander('Diagrama'):
+               cytoscape(elements = elements4, stylesheet = stylesheet4, layout = layout4, selection_type = "single", key = "cyto4", 
+               user_panning_enabled = True, user_zooming_enabled = True, min_zoom = 0.5, max_zoom = 0.75, width = "100%", height = "310px")               
+# Chavetas y rodamientos
+with tab6:
+     st.subheader('Chavetas')
+     col17, col18 = st.columns([1, 3])
+     with col17:
+          st.image(img6.resize((600, 800)))
+     with col18:
+          st.write('''
+               Se analizan bajo la metodología desarrollada en el libro "Diseño de elementos de máquinas" de Bhandari y unicamente se 
+               computan las chavetas del tipo cuadradas. Por otra parte, los rodamientos se pueden diseñar por medio de una 
+               herramienta gratuita proporcionada por la empresa [SKF](https://www.skfbearingselect.com/#/bearing-selection-start):
+          ''')
+# Elementos finitos
+with tab7:
+     st.subheader('Elementos finitos')
+     col19, col20 = st.columns([1, 3])
+     with col19:
+          st.image(img7.resize((600, 800)))
+     with col20:
+          st.write('''
+               Se utilzan los elementos triangulares de deformación constante (CST) para el analisis de componentes 
+               bidimensionales sometidos a esfuerzos y deformaciones planas. Para ello, se establecen las siguientes 
+               ecuaciones y matrices que permiten calcular los esfuerzos y deformaciones de cada elemento:
+          ''')
+          st.latex(r'\begin{align*} \beta_i=y_j-y_m \hspace{0.6cm}& \beta_j=y_m-y_i \hspace{0.3cm}& \beta_m=y_i-y_j\\ \gamma_i=x_m-x_j \hspace{0.6cm}& \gamma_j=x_i-x_m \hspace{0.3cm}& \gamma_m=x_j-x_i\\ \end{align*}')
+          st.latex(r'[B]=\frac{1}{2A}\begin{bmatrix} \beta_i & 0 & \beta_j & 0 & \beta_m & 0 \\ 0 & \gamma_i & 0 & \gamma_j & 0 & \gamma_m \\ \gamma_i & \beta_i & \gamma_j & \beta_j & \gamma_m & \beta_m \\ \end{bmatrix} [D] = \frac{E}{1-v^2}\begin{bmatrix} 1 & v & 0 \\ v & 1 & 0 \\ 0 & 0 & \frac{1-v}{2} \\ \end{bmatrix}')
+          st.latex(r'[k]=tA[B]^T[D][B]')
+          st.latex(r'[F]=[K][d] → [\sigma_x, \sigma_y, \tau_{xy}] = [D][B][d]')
+
+# Marco Metodologico
+st.header('Marco Metodológico')
+# Calculo de factores
+st.subheader('Correas planas, correas trapezoidales, cadenas y engranajes')
+col3, col4 = st.columns([1, 1])
+with col3:
+     with st.form('form1'):
+          st.markdown('''<div style="text-align: justify;">
+               En el proceso de cálculo de estos componentes resulta 
+               indispensable hacer uso de parámetros numéricos exclusivos de cada uno de estos, los cuales por lo general, se representan y determinan 
+               mediante el uso de gráficos y tablas. En este punto, resulta pertinente señalar que, mediante el procesamiento de imágenes se han extraido los datos de las gráficas 
+               correspondientes a cada uno de estos parametros numéricos, para poder representarlos mediante tablas y, posteriormente, mediante 
+               interpolaciones, poder calcular el parámetro numérico deseado de manera rapida y precisa. Para esto último, se hacen uso de las siguientes ecuaciones
+          </div>''', unsafe_allow_html = True)
+          st.markdown('#####')
+          st.latex(r'{x_{{n_{a,b}}}} = \frac{{{x_{{n_{b,a}}}} - {x_{{1_{b,a}}}}}}{{{x_{{2_{b,a}}}} - {x_{{1_{b,a}}}}}}\left( {{x_{{2_{a,b}}}} - {x_{{1_{a,b}}}}} \right) + {x_{{1_{a,b}}}}')
+          st.latex(r'{y_{{n_{a,b}}}} = \frac{{{y_{{n_{b,a}}}} - {y_{{1_{b,a}}}}}}{{{y_{{2_{b,a}}}} - {y_{{1_{b,a}}}}}}\left( {{y_{{2_{a,b}}}} - {y_{{1_{a,b}}}}} \right) + {y_{{1_{a,b}}}}')
+          st.markdown('#####')
+          st.write('Con los parametros numéricos ya tabulados, el cálculo se efectúa como sigue:')
+          slider_1 = st.slider('Ángulo', 5, 35, 5, 1)
+          slider_2 = st.slider('Dientes', 20, 300, 20, 1)
+          col5, col6 = st.columns([1.55, 1])
+          with col5:
+               submitted1 = st.form_submit_button("Cálcular factor geométrico")
+          with col6:
+               fg, fig1 = f2_img(slider_1, slider_2, imgn)
+               st.write('El factor geometrico es: ' + str(fg))
+with col4:
+     st.pyplot(fig1)
+# Calculo de los angulos de descomposicion
+col25, col26 = st.columns([1, 1])
+with col26:
+     with st.form('form2'):
+          st.markdown('''<div style="text-align: justify;">
+               Por otra parte, en la mayoría de casos, la trasmisión de potencia hacia el eje se dará de manera indirecta, es decir, 
+               por medio de corras o cadenas, las cuales podrian ubicarse en distintas configuraciones geométricas.
+               En concecuencia, para efectos de un análisis más realista, las fuerzas que actúan en el eje producto de la transmisión de 
+               potencia, deben de descomponerse en ejes alineados en las direcciones paralela y perpendicular a la gravedad. Los ángulos 
+               de descomposición son:
+          </div>''', unsafe_allow_html = True)
+          st.latex(r'\beta = 90 + \varphi  - \phi \hspace{3mm} \text{y} \hspace{3mm} \alpha = 2\varphi - \beta')
+          st.latex(r'\text{donde} \hspace{10mm} \phi = \cos^{-1} \left( \frac{R - r}{a} \right)')
+          col27, col28 = st.columns([1,1])
+          with col27:
+               number_input_1 = st.number_input('Radio menor (r)', 0.0, 1.05, 0.2, 0.05)
+               number_input_2 = st.number_input('Radio mayor (R)', 0.0, 1.05, 0.1, 0.05)
+               submitted2 = st.form_submit_button('Cálcular ángulos')
+          with col28:
+               number_input_3 = st.number_input('Distancia entre centros (a)', 0.0, 1.05, 0.4, 0.05)
+               number_input_4 = st.number_input('Angulo de desfase (𝜑)', 0, 360, 45, 1)
+          st.markdown('''<div style="text-align: justify;">
+               Al momento de efectuar la descomposición de las fuerzas sobre el eje debe de tenerse en cuenta el sentido de giro del motor.
+          </div>''', unsafe_allow_html = True)
+          st.markdown('#####')
+with col25:
+     fig2, beta, alpa = f3_des(number_input_1, number_input_2, number_input_3, number_input_4)
+     st.pyplot(fig2, use_container_width = True)
+col28.markdown(f':red[$\large β = {beta}$] $\quad$ :blue[$\large α = {alpa}$]')
+# Calculo de ejes
 st.subheader('Ejes de transmisión')
+# Calculo de ejes - Analítico
 st.markdown('#### Cálculo general de las reacciones y desplazamientos mediante ecuaciones análiticas (Euler - Bernoulli)')
 st.markdown('''<div style="text-align: justify;">
      Mediante el uso del método de las integraciones concecutivas se pueden cálcular las reacciones y desplazamientos correspondientes a un eje 
@@ -582,8 +747,8 @@ st.markdown('''<div style="text-align: justify;">
      siempre será posible calcular todas las reacciones y desplazamientos a los que se encuentre sometido un eje de transmisión de 
      potencia, lo cual valida la metodología de cálculo general de ejes, desarrollada para el modelo de Euler y Bernoully.
 </div>''', unsafe_allow_html = True)
-
 st.markdown('#### Cálculo general de las reacciones y desplazamientos mediante elementos finitos (Timoshenko)')
+# Calculo de ejes - Numerico
 st.markdown('''<div style="text-align: justify;">
      Mediante el uso de matrices se pueden cálcular las reacciones y desplazamientos correspondientes a un eje 
      con propiedades geométricas y mecánicas no constantes, sometido a cualquier cantidad de fuerzas, momentos y apoyos. 
@@ -617,10 +782,11 @@ with col30:
           mediante la siguiente expresión: 
      </div>''', unsafe_allow_html = True)
      st.latex(r'K_s=\frac{6(1+\nu)(1+m^2)^2}{(7+6\nu)(1+m^2)^2+(20+12\nu)m^2}')
-     # st.markdown(r'$\text{Donde:}$')
      st.write('Donde:')
      st.latex(r'm = \frac{r}{R} \quad v = \text{Coeficiente de Poisson (0.3)}')
-
+url4 = 'https://junior19a2000.github.io/Jupywidgets/lab?path=Numesym.ipynb'
+st.markdown(f'<iframe src={url4} height="760" width="100%"></iframe>', unsafe_allow_html = True)
+# Analisis estatico de ejes
 st.markdown('#### Análisis estático')
 col31, col32 = st.columns([1, 1], gap = 'medium')
 with col31:
@@ -634,12 +800,12 @@ with col31:
           que se deba conocer su posición exacta. 
      </div>''', unsafe_allow_html = True)
 with col32:
-     st.image(Image.open(r'Imagenes/maxelem.jpg').resize((600, 230)))
+     st.image(img8.resize((600, 230)))
 col33, col34 = st.columns([1, 2.3], gap = 'medium')
 with col33:
      st.markdown('##')
      st.markdown('#####')
-     st.image(Image.open(r'Imagenes/maxelem1.jpg').resize((400, 400)))
+     st.image(img9.resize((400, 400)))
 with col34:
      st.write('Los esfuerzos que se analizaran en dicho elemento son:')
      st.latex(r'\small \sigma_x=\frac{F_x}{A} \quad \sigma_y=\frac{M_yc}{I} \quad \sigma_z=\frac{M_zc}{I} \quad \tau_x=\frac{M_xc}{J} \quad \tau_y=\frac{F_yQ}{It} \quad \tau_z=\frac{F_zQ}{It}')
@@ -697,17 +863,14 @@ with col35:
      st.latex(r'\text{Criterio de falla según Von Mises}=\sqrt{\sigma_{\text{k}}^{2}+3\tau_{\text{k}}^{2}}')
      st.latex(r'\text{Criterio de falla según Tresca}=\sqrt{\sigma_{\text{k}}^{2}+4\tau_{\text{k}}^{2}}')
      st.latex(r'\text{Criterio de falla según Rankine}=\frac{1}{2}(\sigma_{\text{k}}+\sqrt{\sigma_{\text{k}}^{2}+4\tau_{\text{k}}^{2}})')
-     # st.markdown('''<div style="text-align: justify;">
-     #      Considerando un enfoque conservador, los esfuerzos normales y transversales combinados se calcularán con las siguientes ecuaciones:.
-     # </div>''', unsafe_allow_html = True)
 with col36:
-     st.image(Image.open(r'Imagenes/esfuerzoscf.jpg').resize((600, 300)))
+     st.image(img10.resize((600, 300)))
      st.markdown('#####')
-     st.image(Image.open(r'Imagenes/elem4.png').resize((600, 230)))
+     st.image(img11.resize((600, 230)))
      st.markdown('#####')
      url1 = 'https://junior19.starboard.host/v1/embed/0.15.3/cbljq1i23akg00a8j9b0/nCzetdj/'
      st.markdown(f'<iframe src={url1} height="655" width="100%"></iframe>', unsafe_allow_html = True)
-
+# Analisis dinamico de ejes
 st.markdown('#### Análisis dinámico')
 col37, col38 = st.columns([1, 1], gap = 'medium')
 with col37:
@@ -764,7 +927,7 @@ with col37:
      \text{Axial} & \sigma _{{m_a}} = \sigma _{{\text{axial}}} & \sigma _{{a_a}} = 0 \\ \\\hline\\
      \text{Torsional} & \tau _{{m_t}} = \tau _{{\text{torsional}}} & \tau _{{a_t}} = 0 \\ \\\hline\\
      \text{Flexionante} & \sigma _{{m_f}} = 0 & \sigma _{{a_f}} = \sigma _{{\text{flexionante}}} \\ \\\hline\\
-     \hspace{4mm} \text{Cortante} \hspace{3.5mm} & \hspace{3.5mm} \tau _{{m_c}} = \tau _{{\text{medio cortante}}} \hspace{3.5mm} & \hspace{3.5mm} \tau _{{a_c}} = \tau _{{\text{alternante cortante}}} \hspace{4mm} \\ \\\hline
+     \hspace{4.5mm} \text{Cortante} \hspace{4mm} & \hspace{3.5mm} \tau _{{m_c}} = \tau _{{\text{medio cortante}}} \hspace{3.5mm} & \hspace{3.5mm} \tau _{{a_c}} = \tau _{{\text{alternante cortante}}} \hspace{4mm} \\ \\\hline
      \end{array}
      $$
      """
@@ -817,7 +980,7 @@ with col38:
      st.latex(r'''
      {\text{ASME}}:\quad {\left( {\frac{{{\sigma _a}}}{{{{\text{S}}_e}}}} \right)^2}{\text{ + }}{\left( {\frac{{{\sigma _m}}}{{{{\text{S}}_y}}}} \right)^2}{\text{ = }}\frac{{\text{1}}}{{{n^{\text{2}}}}}
      ''')
-
+# Analisis de rigidez de ejes
 st.markdown('#### Análisis de rigidez')
 col39, col40 = st.columns([1, 1], gap = 'medium')
 with col39:
@@ -827,10 +990,94 @@ with col39:
      </div>''', unsafe_allow_html = True)
 with col40:
      st.latex(r'\delta_R = \sqrt{\delta _x^2 + \delta _y^2 + \delta _z^2} \quad\quad \theta_R = \sqrt {\theta _x^2 + \theta _y^2 + \theta _z^2}')
-
+# Analisis vibracional de ejes
 st.markdown('#### Análisis vibracional')
+col41, col42 = st.columns([1, 1], gap = 'medium')
+with col41:
+     st.markdown('''<div style="text-align: justify;">
+          El cálculo de los límites del rango de operación en el cual estará situada la velocidad critica fundamental del eje de transmisión 
+          de potencia, se efectúa siguiendo las ecuaciones de Rayleigh y Ritz:
+     </div>''', unsafe_allow_html = True)
+     st.latex(r'''
+     \begin{array}{|c|c|}
+     \hline \\
+     \hspace{1.31cm} \text{Límite inferior} \hspace{1.31cm} & \hspace{1.31cm} \text{Límite superior} \hspace{1.31cm} \\ \\
+     \hline \\
+     \text{RPM} = \frac{30}{\pi}\sqrt{\frac{g}{\max(\delta_R)}} & \text{RPM} = \frac{30}{\pi}\sqrt{g\frac{\sum\limits_{i = 1}^T {m_i y_i}}{\sum\limits_{i = 1}^T {m_i y_i^2}}} \\ \\
+     \hline
+     \end{array}
+     ''')
+     col43, col44 = st.columns([1, 1])
+     with col43:
+          number_input_5 = st.number_input('Número de elementos en cada tramo:', 1, 100, 1, 1, label_visibility = 'visible')
+     with col44:
+          selectbox_1 = st.selectbox('Tipo de eje a analizar:', ('Escalonado', 'Hueco'), label_visibility = 'visible')
+     fig3, df = f1_rpm(number_input_5, selectbox_1)
+     st.pyplot(fig3)
+     st.dataframe(df, use_container_width = True, height = 150)
+with col42:
+     st.markdown('''<div style="text-align: justify;">
+          Para el cálculo del límite superior, resulta necesario primeramente dividir al eje en sectores, luego calcular la masa de cada uno 
+          de ellos y finalmente determinar la deflexión en el punto medio de cada uno de estos sectores. Una vez calculados estos valores, 
+          recién se puede hallar el valor deseado, sin embargo, la precisión de este resultado depende del número de divisiones del eje, lo 
+          cual significa que, a mayor número de divisiones, mayor precisión en el resultado, sin embargo, esto a su vez implica mayores cálculos 
+          debido a los pasos comentados previamente. Teniendo en cuenta lo anterior, se ha visto por conveniente modificar la ecuación en cuestión, 
+          de la siguiente manera:
+     </div>''', unsafe_allow_html = True)
+     st.latex(r'''
+     \text{Límite superior:}\quad \text{RPM} = \frac{30}{\pi}\sqrt{g\frac{\sum\limits_{i = 1}^T {\sum\limits_{j = 1}^n {m_{i_j} y_{i_j}} }}{\sum\limits_{i = 1}^T {\sum\limits_{j = 1}^n {m_{i_j} y_{i_j}^2} } }}
+     ''')
+     st.markdown('''<div style="text-align: justify;">
+          Llevando al límite el número de divisiones del eje y reemplazando el valor de la masa correspondiente a cada una de estas divisiones:
+     </div>''', unsafe_allow_html = True)
+     st.latex(r'''
+     \sum\limits_{j = 1}^n {m_j y_j} = \lim_{{n \to \infty}} \sum\limits_{j = 1}^n \Delta m_j \cdot y_j = \rho A \lim_{{n \to \infty}} \sum\limits_{j = 1}^n \Delta x_j \cdot y_j = \rho_T A_T \int y_T dx
+     ''')
+     st.latex(r'''
+     \sum\limits_{j = 1}^n {m_j y_j^2} = \lim_{{n \to \infty}} \sum\limits_{j = 1}^n \Delta m_j \cdot y_j^2 = \rho A \lim_{{n \to \infty}} \sum\limits_{j = 1}^n \Delta x_j \cdot y_j^2 = \rho_T A_T \int y_T^2 dx
+     ''')
+     st.markdown('''<div style="text-align: justify;">
+          Finalmente, reemplazando en la ecuación inicial, el limite superior se computa con:
+     </div>''', unsafe_allow_html = True)
+     st.latex(r'''
+     \text{Límite superior:}\quad \text{RPM} = \frac{30}{\pi}\sqrt{g\frac{\sum\limits_{i = 1}^T \rho_i A_i \int y_i dx}{\sum\limits_{i = 1}^T \rho_i A_i \int y_i^2 dx}}
+     ''')
+     st.markdown('''<div style="text-align: justify;">
+          Esta ecuación ofrece un resultado más preciso, dado que el número de divisiones se ha elevado al infinito, lo cual ha 
+          permitido convertir las sumatorias en integrales, y que, por otra parte, resulta conveniente en este caso, toda vez que las deflexiones 
+          en el eje han sido calculadas mediante funciones analíticas y numéricas que se pueden integrar de manera rápida y precisa.
+     </div>''', unsafe_allow_html = True)
+# Elementos finiros
+st.subheader('Elementos bidimensionales')
+col45, col46 = st.columns([1, 1], gap = 'medium')
+with col45:
+     st.markdown('''<div style="text-align: justify;">
+          Se utilzan elementos triangulares de deformación constante (CST), donde cada uno de estos estará definido geométricamente por tres pares 
+          de coordenadas, a partir de los cuales se pueden establecer las siguientes expresiones:
+     </div>''', unsafe_allow_html = True)
+     st.latex(r'\begin{align*} \beta_i=y_j-y_m \hspace{0.6cm}& \beta_j=y_m-y_i \hspace{0.3cm}& \beta_m=y_i-y_j\\ \gamma_i=x_m-x_j \hspace{0.6cm}& \gamma_j=x_i-x_m \hspace{0.3cm}& \gamma_m=x_j-x_i\\ \end{align*}')
+     st.markdown('''<div style="text-align: justify;">
+          Ahora bien, considerando estas expresiones junto con el área, módulo de elasticidad y el coeficiente de Poisson correspondientes a 
+          cada uno de los elementos, se describen las siguientes matrices:
+     </div>''', unsafe_allow_html = True)
+     st.latex(r'[B]=\frac{1}{2A}\begin{bmatrix} \beta_i & 0 & \beta_j & 0 & \beta_m & 0 \\ 0 & \gamma_i & 0 & \gamma_j & 0 & \gamma_m \\ \gamma_i & \beta_i & \gamma_j & \beta_j & \gamma_m & \beta_m \\ \end{bmatrix} \quad [D] = \frac{E}{1-v^2}\begin{bmatrix} 1 & v & 0 \\ v & 1 & 0 \\ 0 & 0 & \frac{1-v}{2} \\ \end{bmatrix}')
+     st.markdown('''<div style="text-align: justify;">
+          A partir de estas y considerando el espesor de cada elemento, se puede formular la matriz de rigidez respectiva mediante la siguiente ecuación:
+     </div>''', unsafe_allow_html = True)
+     st.latex(r'[k]=tA[B]^T[D][B]')
+     st.markdown('''<div style="text-align: justify;">
+          Con las matrices de rigidez individuales se plantea la matriz de rigidez global, la cual, junto con las matrices de fuerzas y desplazamientos, 
+          se redimensionan en base a las condiciones de frontera, para posteriormente resolver el sistema general y determinar asi, las reacciones y desplazamientos 
+          en cada nodo de la malla, lo cual asu vez, permite calcular los esfueroz en cada elemento de la malla, mediante las siguientes expresiones:
+     </div>''', unsafe_allow_html = True)
+     st.latex(r'[F]=[K][d] → [\sigma_x, \sigma_y, \tau_{xy}] = [D][B][d]')
+with col46:
+     url3 = 'https://junior19.starboard.host/v1/embed/0.15.3/cbljq1i23akg00a8j9b0/n529MY4/'
+     st.markdown(f'<iframe src={url3} height="655" width="100%"></iframe>', unsafe_allow_html = True)
 
-# --------------------------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Sobre el autor
 with st.sidebar:
      st.markdown('# Sobre el autor ...')
      st.markdown('''<div style="text-align: justify;">
@@ -844,4 +1091,4 @@ with st.sidebar:
           proyectos similares, humildemente considero que el mío es mucho mejor.
      </div>''', unsafe_allow_html = True)
      st.markdown('#')
-     st.image(Image.open(r'Imagenes/FotografiaJR.png'), caption = 'Junior Joel Aguilar Hancco')
+     st.image(img12, caption = 'Junior Joel Aguilar Hancco')
