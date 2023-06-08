@@ -784,7 +784,7 @@ with col30:
      st.latex(r'K_s=\frac{6(1+\nu)(1+m^2)^2}{(7+6\nu)(1+m^2)^2+(20+12\nu)m^2}')
      st.write('Donde:')
      st.latex(r'm = \frac{r}{R} \quad v = \text{Coeficiente de Poisson (0.3)}')
-url4 = 'https://junior19a2000.github.io/Jupywidgets/lab?path=Numesym.ipynb'
+url4 = 'https://junior19a2000.github.io/Jupywidgets/lab?path=ShaftDemo.ipynb'
 st.markdown(f'<iframe src={url4} height="760" width="100%"></iframe>', unsafe_allow_html = True)
 # Analisis estatico de ejes
 st.markdown('#### Análisis estático')
@@ -1047,7 +1047,7 @@ with col42:
           permitido convertir las sumatorias en integrales, y que, por otra parte, resulta conveniente en este caso, toda vez que las deflexiones 
           en el eje han sido calculadas mediante funciones analíticas y numéricas que se pueden integrar de manera rápida y precisa.
      </div>''', unsafe_allow_html = True)
-# Elementos finiros
+# Elementos finitos
 st.subheader('Elementos bidimensionales')
 col45, col46 = st.columns([1, 1], gap = 'medium')
 with col45:
